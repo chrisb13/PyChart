@@ -353,7 +353,8 @@ def main():
             mapref2d = ma.masked_array(mapref2d, mapvar2d.mask)
     
         # define subplot
-        ax[ifile] = plt.subplot(njsplt, nisplt, ifile+1, projection=proj, axisbg='0.75')
+        # ax[ifile] = plt.subplot(njsplt, nisplt, ifile+1, projection=proj, axisbg='0.75')
+        ax[ifile] = plt.subplot(njsplt, nisplt, ifile+1, projection=proj) # cb hack 
     
         # put proj, extend, grid ...
         if llatlon_lim:
@@ -373,7 +374,8 @@ def main():
         # could be an option to not plot the map
             print 'plot pcolormesh ...'
             maptoplot2d=(mapvar2d-mapref2d)*map_sf
-            pcol = ax[ifile].pcolormesh(lon2d[::ncrs,::ncrs],lat2d[::ncrs,::ncrs],maptoplot2d[::ncrs,::ncrs],cmap=cmap,norm=norm,vmin=rmin,vmax=rmax,transform=ccrs.PlateCarree(),rasterized=True)
+            # pcol = ax[ifile].pcolormesh(lon2d[::ncrs,::ncrs],lat2d[::ncrs,::ncrs],maptoplot2d[::ncrs,::ncrs],cmap=cmap,norm=norm,vmin=rmin,vmax=rmax,transform=ccrs.PlateCarree(),rasterized=True)
+            pcol = ax[ifile].pcolormesh(lon2d.data[::ncrs,::ncrs],lat2d.data[::ncrs,::ncrs],maptoplot2d[::ncrs,::ncrs],cmap=cmap,norm=norm,vmin=rmin,vmax=rmax,transform=ccrs.PlateCarree(),rasterized=True) # cb hack
     
         # add contour if ask
         if args.cntf:
