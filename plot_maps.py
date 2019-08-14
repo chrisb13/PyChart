@@ -1,7 +1,7 @@
 #!/usr/local/sci/bin/python2.7
 
 import matplotlib
-#matplotlib.use('GTKAgg') 
+# matplotlib.use('GTKAgg') 
 import numpy as np
 from numpy import ma
 import os
@@ -30,19 +30,19 @@ def sanity_check(args):
     # sanity check
     if args.spfid:
         if len(args.spfid) != len(args.mapf):
-            print 'title list and file list not the same length, exit'
+            print('title list and file list not the same length, exit')
             sys.exit(2)
 
     if args.cntf:
         if len(args.cntf) != len(args.spfid):
-            print 'Length of contour file list and title list is not the same length, exit'
+            print('Length of contour file list and title list is not the same length, exit')
             sys.exit(42)
 
 def get_jk(jk0=None,z0=None,cfile=None):
     jk=0
     if cfile:
         if jk0 and z0:
-            print 'ERROR, jk and z define, check script argument list'
+            print('ERROR, jk and z define, check script argument list')
             sys.exit(42)
         if jk0:
             jk=jk0[0]
@@ -55,10 +55,10 @@ def get_var_lst(cvar,cfile):
     nvar=len(cvar_lst)
     nfile=len(cfile)
     if len(cvar) == 1:
-        print 'Length of variable list is 1, we assume it is the same variable for all input file'
+        print('Length of variable list is 1, we assume it is the same variable for all input file')
         cvar_lst=[cvar[0]]*nfile
     elif nvar != nfile:
-        print 'length of variable list should be 1 or '+str(nfile)
+        print('length of variable list should be 1 or '+str(nfile))
         sys.exit(42)
     return cvar_lst
 
@@ -76,10 +76,10 @@ def get_subplot(csubplt,nplt):
     ni=int(csub[ 0])
     nj=int(csub[-1])
     if ni*nj < nplt:
-        print ni*nj,' panels'
-        print nplt, ' plot asked'
-        print ' number subplot lower than the number of plot asked '
-        print ' add -s XxY option in the command line'
+        print(ni*nj,' panels')
+        print(nplt, ' plot asked')
+        print(' number subplot lower than the number of plot asked ')
+        print(' add -s XxY option in the command line')
         sys.exit(42)
     return ni,nj
 
@@ -226,8 +226,8 @@ def def_projection(proj_name):
         global_lim='F'
         latlon_lim='F'
     else:
-        print 'projection '+proj_name+' unknown'
-        print 'should be ross, gulf_stream, feroe, global_mercator, global_robinson, japan, ovf, greenland, natl, global, south_stereo, ant'
+        print('projection '+proj_name+' unknown')
+        print('should be ross, gulf_stream, feroe, global_mercator, global_robinson, japan, ovf, greenland, natl, global, south_stereo, ant')
         sys.exit(42)
     return proj, XY_lim, joffset, global_lim, latlon_lim
 # =======================================================================================================================================================
@@ -265,11 +265,11 @@ def main():
     
         if args.sprid:
             creft=' - '+args.sprid[0]
-        print nmapreffile,' ref',cmapreffile[0],args.mapreff 
+        print(nmapreffile,' ref',cmapreffile[0],args.mapreff )
         if nmapreffile==1 :
             mapref2d=get_2d_data(cmapreffile[0],cmaprefvar[0],klvl=mapjk,offsety=joffset)
         else:
-            print 'more than 1 ref file, not yet implememnnted'
+            print('more than 1 ref file, not yet implememnnted')
             sys.exit(42)
     
     if args.cntf:
@@ -334,7 +334,7 @@ def main():
         # deals with mesh mask 
             cmsk=args.mask[ifile]
             if os.path.isfile(cmsk):
-               print 'open '+cmsk
+               print('open '+cmsk)
                msk = get_2d_data(cmsk,'tmask',klvl=mapjk,offsety=joffset)
                msk = ma.masked_where(msk==0.0,msk)
     
@@ -372,7 +372,7 @@ def main():
         ncrs=1
         if args.mapf:
         # could be an option to not plot the map
-            print 'plot pcolormesh ...'
+            print('plot pcolormesh ...')
             maptoplot2d=(mapvar2d-mapref2d)*map_sf
             # pcol = ax[ifile].pcolormesh(lon2d[::ncrs,::ncrs],lat2d[::ncrs,::ncrs],maptoplot2d[::ncrs,::ncrs],cmap=cmap,norm=norm,vmin=rmin,vmax=rmax,transform=ccrs.PlateCarree(),rasterized=True)
             pcol = ax[ifile].pcolormesh(lon2d.data[::ncrs,::ncrs],lat2d.data[::ncrs,::ncrs],maptoplot2d[::ncrs,::ncrs],cmap=cmap,norm=norm,vmin=rmin,vmax=rmax,transform=ccrs.PlateCarree(),rasterized=True) # cb hack
@@ -384,7 +384,7 @@ def main():
             if args.cntreff:
                 cntref2dm = ma.masked_where(msk*cntref2d==0.0,cntref2d)
     
-            print 'plot contour ...'
+            print('plot contour ...')
             cnttoplot=(var2dm-cntref2dm)*cnt_sf
             ax[ifile].contour(lon2d[::ncrs,::ncrs],lat2d[::ncrs,::ncrs],cnttoplot[::ncrs,::ncrs],levels=cntlvl,transform=ccrs.PlateCarree(),colors=cntclr,linewidths=1)
             
@@ -392,12 +392,12 @@ def main():
         if args.bathyf:
             bathy2d=get_2d_data(args.bathyf[ifile],args.bathyv[0],offsety=joffset)
             bathy2dm = ma.masked_where(bathy2d==0.0,bathy2d)
-            print 'plot bathymetry ...'
+            print('plot bathymetry ...')
             ax[ifile].contour(lon2d,lat2d,bathy2dm,levels=args.bathylvl[:],transform=ccrs.PlateCarree(),colors='0.5',linewidths=0.5)
     
         # add section line if ask
         if args.secf:
-            print 'plot section line'
+            print('plot section line')
             plot_section_line(ax[ifile],args.secf[:])
     
     # remove extra white space
@@ -427,8 +427,8 @@ def main():
     plt.savefig(coutput_name+'.png', format='png', dpi=150)
     
     # show figure
-    print 'show figure ...'
-    plt.show()
+    # print('show figure ...')
+    # plt.show()
 
 if __name__ == '__main__':
     main()
